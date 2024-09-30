@@ -2,12 +2,17 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 import cors from "cors";
+import { exec } from "child_process";
+
 const app = express();
 const port = 3000;
 
 app.use(cors());
 
 let __dirname = "";
+
+exec("npm run dev");
+
 // Endpoint to list top-level folders
 app.get("/list-folders", (req, res) => {
   const rootPath = path.join(__dirname, "src", "tasks");
