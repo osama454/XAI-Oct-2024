@@ -62,13 +62,16 @@ const Projects: React.FC = () => {
   };
 
   // Render selected component
-  const handleComponentRender = async (
-    componentName: string,
-    folder: string
-  ) => {
+  //${selectedFolder}/${folder}/${componentName}.tsx
+  const handleComponentRender = async (path: string) => {
     try {
+      if (path == "/") {
+        setCurrentComponent(null);
+        return;
+      }
       let componentModule;
-      let file = `./tasks/${selectedFolder}/${folder}/${componentName}.tsx`;
+      let file = `./tasks/${path}/App.tsx`;
+
       componentModule = await import(file);
 
       if (componentModule) {
@@ -78,6 +81,22 @@ const Projects: React.FC = () => {
       console.error("Error loading component:", error);
     }
   };
+
+  useEffect(() => {
+    // Load the component on the initial load
+    handleComponentRender(window.location.pathname);
+
+    // Listen to browser back/forward navigation
+    const onPopState = () => {
+      handleComponentRender(window.location.pathname);
+    };
+    window.addEventListener("popstate", onPopState);
+
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener("popstate", onPopState);
+    };
+  }, []);
 
   return currentComponent ? (
     currentComponent
@@ -136,10 +155,15 @@ const Projects: React.FC = () => {
                   <button
                     key={file}
                     onClick={() =>
-                      handleComponentRender(
-                        buttonLabel + `/${buttonLabel.toUpperCase()}`,
-                        project.folder
-                      )
+                      //
+                      {
+                        window.history.pushState(
+                          {},
+                          "",
+                          `${selectedFolder}/${project.folder}/${buttonLabel}`
+                        );
+                        handleComponentRender(window.location.pathname);
+                      }
                     }
                     className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md m-2 hover:bg-blue-700 transition duration-300"
                   >

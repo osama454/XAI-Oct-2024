@@ -1,0 +1,1 @@
+export default ()=> "response B task 2"
