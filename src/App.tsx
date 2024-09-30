@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-
 interface Project {
   folder: string;
   files: { [key: string]: string };
+  folders: Project[];
 }
 
 const Projects: React.FC = () => {
@@ -36,10 +36,17 @@ const Projects: React.FC = () => {
 
     const loadProjects = async () => {
       try {
-        const response = await fetch(
+        let response = await fetch(
           `http://localhost:3000/folders/${selectedFolder}`
         );
         const subfoldersData = await response.json();
+        for (let i = 0; i < subfoldersData.length; i++) {
+          response = await fetch(
+            `http://localhost:3000/folders/${selectedFolder}/${subfoldersData[i].folder}`
+          );
+          let folders = await response.json();
+          subfoldersData[i].folders = folders;
+        }
         setProjects(subfoldersData);
       } catch (error) {
         console.error("Error loading projects:", error);
@@ -61,9 +68,8 @@ const Projects: React.FC = () => {
   ) => {
     try {
       let componentModule;
-      componentModule = await import(
-        `./tasks/${selectedFolder}/${folder}/${componentName}.tsx`
-      );
+      let file = `./tasks/${selectedFolder}/${folder}/${componentName}.tsx`;
+      componentModule = await import(file);
 
       if (componentModule) {
         setCurrentComponent(React.createElement(componentModule.default));
@@ -110,7 +116,7 @@ const Projects: React.FC = () => {
             </h2>
             <div className="project-buttons flex justify-center flex-wrap mt-4">
               {Object.keys(project.files).map((file) => {
-                if (file === "video.mp4") {
+                if (file.endsWith(".mp4")) {
                   return (
                     <a
                       key={file}
@@ -121,21 +127,27 @@ const Projects: React.FC = () => {
                       Watch Video
                     </a>
                   );
-                } else {
-                  const buttonLabel = file.replace(".tsx", "");
-                  return (
-                    <button
-                      key={file}
-                      onClick={() =>
-                        handleComponentRender(buttonLabel, project.folder)
-                      }
-                      className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md m-2 hover:bg-blue-700 transition duration-300"
-                    >
-                      {buttonLabel !== 'I' ? `Load Response ${buttonLabel}` : 'Load Ideal Response'}
-
-                    </button>
-                  );
                 }
+              })}
+              {project.folders.map((folder) => {
+                let file = folder.folder;
+                const buttonLabel = file.replace(".tsx", "");
+                return (
+                  <button
+                    key={file}
+                    onClick={() =>
+                      handleComponentRender(
+                        buttonLabel + `/${buttonLabel.toUpperCase()}`,
+                        project.folder
+                      )
+                    }
+                    className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md m-2 hover:bg-blue-700 transition duration-300"
+                  >
+                    {buttonLabel !== "i"
+                      ? `Load Response ${buttonLabel.toUpperCase()}`
+                      : "Load Ideal Response"}
+                  </button>
+                );
               })}
             </div>
           </div>

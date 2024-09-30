@@ -38,8 +38,8 @@ app.get("/list-folders", (req, res) => {
 });
 
 // Endpoint to list subfolders and files inside the selected top-level folder
-app.get("/folders/:folder/", (req, res) => {
-  const folder = req.params.folder;
+app.get("/folders/*", (req, res) => {
+  const folder = req.params[0];
   const folderPath = path.join(__dirname, "src", "tasks", folder);
 
   fs.readdir(folderPath, { withFileTypes: true }, (err, files) => {
