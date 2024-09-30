@@ -13,6 +13,13 @@ let __dirname = "";
 
 exec("npm run dev");
 
+app.get('/', (req, res) => {
+    const originalUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+    const updatedUrl = originalUrl.replace(':3000', ':5173');
+    res.redirect(updatedUrl);
+  });
+  
+
 // Endpoint to list top-level folders
 app.get("/list-folders", (req, res) => {
   const rootPath = path.join(__dirname, "src", "tasks");

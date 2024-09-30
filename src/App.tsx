@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
 
 interface Project {
   folder: string;
@@ -74,16 +73,23 @@ const Projects: React.FC = () => {
     }
   };
 
-  return (
-    <div>
-      <h1>Projects</h1>
+  return currentComponent ? (
+    currentComponent
+  ) : (
+    <div className="bg-gray-100 min-h-screen p-4">
+      <h1 className="text-4xl font-bold text-center text-gray-800 my-8">
+        Projects
+      </h1>
 
-      <div className="filter">
-        <label htmlFor="folderSelect">Select a week:</label>
+      <div className="filter flex justify-center mb-8">
+        <label htmlFor="folderSelect" className="text-lg text-gray-600 mr-4">
+          Select a week:
+        </label>
         <select
           id="folderSelect"
           value={selectedFolder}
           onChange={handleFolderChange}
+          className="p-3 bg-white border-2 border-blue-500 rounded-lg text-blue-500 hover:bg-blue-500 hover:text-white transition duration-300"
         >
           {folders.map((folder) => (
             <option key={folder} value={folder}>
@@ -93,19 +99,24 @@ const Projects: React.FC = () => {
         </select>
       </div>
 
-      <div id="projectsContainer">
+      <div id="projectsContainer" className="max-w-5xl mx-auto px-4">
         {projects.map((project) => (
-          <div className="project" key={project.folder}>
-            <h2>{project.folder}</h2>
-            <div className="project-buttons">
+          <div
+            className="bg-white shadow-md rounded-lg p-6 mb-8 transform hover:-translate-y-2 hover:shadow-xl transition duration-300"
+            key={project.folder}
+          >
+            <h2 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+              {project.folder}
+            </h2>
+            <div className="project-buttons flex justify-center flex-wrap mt-4">
               {Object.keys(project.files).map((file) => {
                 if (file === "video.mp4") {
                   return (
                     <a
                       key={file}
                       href={`http://localhost:3000${project.files[file]}`}
-                      target="_blank"
                       rel="noopener noreferrer"
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md m-2 hover:bg-blue-700 transition duration-300"
                     >
                       Watch Video
                     </a>
@@ -118,8 +129,10 @@ const Projects: React.FC = () => {
                       onClick={() =>
                         handleComponentRender(buttonLabel, project.folder)
                       }
+                      className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md m-2 hover:bg-blue-700 transition duration-300"
                     >
-                      {buttonLabel} Response
+                      {buttonLabel !== 'I' ? `Load Response ${buttonLabel}` : 'Load Ideal Response'}
+
                     </button>
                   );
                 }
@@ -127,13 +140,6 @@ const Projects: React.FC = () => {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Render current component if selected */}
-      <div id="componentContainer">
-        {currentComponent && (
-          <div className="rendered-component">{currentComponent}</div>
-        )}
       </div>
     </div>
   );
