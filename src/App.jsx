@@ -11,7 +11,7 @@ const Projects = () => {
     // console.log("loadFolders");
     const loadFolders = async () => {
       try {
-        const response = await fetch("http://localhost:3000/list-folders");
+        const response = await fetch(`http://${window.location.hostname}:3000/list-folders`);
         const foldersData = await response.json();
         setFolders(foldersData);
         if (foldersData.length > 0) {
@@ -32,12 +32,12 @@ const Projects = () => {
     const loadProjects = async () => {
       try {
         let response = await fetch(
-          `http://localhost:3000/folders/${selectedFolder}`
+          `http://${window.location.hostname}:3000/folders/${selectedFolder}`
         );
         const subfoldersData = await response.json();
         for (let i = 0; i < subfoldersData.length; i++) {
           response = await fetch(
-            `http://localhost:3000/folders/${selectedFolder}/${subfoldersData[i].folder}`
+            `http://${window.location.hostname}:3000/folders/${selectedFolder}/${subfoldersData[i].folder}`
           );
           let folders = await response.json();
           subfoldersData[i].folders = folders;
@@ -149,7 +149,7 @@ const Projects = () => {
                   return (
                     <a
                       key={file}
-                      href={`http://localhost:3000${project.files[file]}`}
+                      href={`http://${window.location.hostname}:3000${project.files[file]}`}
                       rel="noopener noreferrer"
                       className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md m-2 hover:bg-blue-700 transition duration-300"
                     >

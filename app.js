@@ -11,14 +11,13 @@ app.use(cors());
 
 let __dirname = "";
 
-exec("npm run dev");
+exec("npm run dev -- --host");
 
-app.get('/', (req, res) => {
-    const originalUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
-    const updatedUrl = originalUrl.replace(':3000', ':5173');
-    res.redirect(updatedUrl);
-  });
-  
+app.get("/", (req, res) => {
+  const originalUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+  const updatedUrl = originalUrl.replace(":3000", ":5173");
+  res.redirect(updatedUrl);
+});
 
 // Endpoint to list top-level folders
 app.get("/list-folders", (req, res) => {
@@ -75,6 +74,6 @@ app.get("/folders/*", (req, res) => {
 // Serve static files such as HTML and video files
 app.use(express.static(path.join(__dirname, "src", "tasks")));
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
