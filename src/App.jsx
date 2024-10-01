@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
-
-
-const Projects= () => {
+const Projects = () => {
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [projects, setProjects] = useState([]);
-  const [currentComponent, setCurrentComponent] =
-    useState(null);
-
+  const [currentComponent, setCurrentComponent] = useState(null);
+  const [currentUrl, setCurrentUrl] = useState("");
+  // console.log(currentUrl);
   // Fetch top-level folders
   useEffect(() => {
+    // console.log("loadFolders");
     const loadFolders = async () => {
       try {
         const response = await fetch("http://localhost:3000/list-folders");
@@ -29,7 +28,7 @@ const Projects= () => {
   // Load projects when a folder is selected
   useEffect(() => {
     if (!selectedFolder) return;
-
+    // console.log("loadProjects");
     const loadProjects = async () => {
       try {
         let response = await fetch(
@@ -59,7 +58,15 @@ const Projects= () => {
 
   // Render selected component
   //${selectedFolder}/${folder}/${componentName}.tsx
-  const handleComponentRender = async (path) => {
+
+  const handleComponentRender = async () => {
+    let path = window.location.pathname;
+
+    if (path == currentUrl) {
+      // console.log("url is not modified");
+      return;
+    }
+    setCurrentUrl(path);
     try {
       if (path == "/") {
         setCurrentComponent(null);
@@ -79,13 +86,19 @@ const Projects= () => {
   };
 
   useEffect(() => {
+    // console.log("Load the component on the initial load");
     // Load the component on the initial load
-    handleComponentRender(window.location.pathname);
+    handleComponentRender();
 
     // Listen to browser back/forward navigation
     const onPopState = () => {
       // handleComponentRender(window.location.pathname);
-      location.reload()
+      // console.log("onPopState");
+      // console.log(window.location.pathname);
+      // console.log(currentUrl);
+      if (window.location.pathname != currentUrl) {
+        location.reload()
+      }
     };
     window.addEventListener("popstate", onPopState);
 
@@ -93,7 +106,7 @@ const Projects= () => {
     return () => {
       window.removeEventListener("popstate", onPopState);
     };
-  }, []);
+  }, [currentUrl]);
 
   return currentComponent ? (
     currentComponent
