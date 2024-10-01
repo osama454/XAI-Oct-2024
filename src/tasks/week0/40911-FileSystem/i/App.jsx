@@ -30,7 +30,11 @@ import { Label } from "@/components/ui/label";
 function App() {
   const [path, setPath] = useState(["Home"]);
   const [files, setFiles] = useState({
-    Home: { folders: ["Folder1", "Folder2"], files: ["File1.txt", "File2.txt"], fileContents: {} },
+    Home: {
+      folders: ["Folder1", "Folder2"],
+      files: ["File1.txt", "File2.txt"],
+      fileContents: {},
+    },
     Folder1: { folders: [], files: ["File3.txt"], fileContents: {} },
     Folder2: { folders: [], files: [], fileContents: {} },
   });
@@ -38,7 +42,8 @@ function App() {
   const [currentContent, setCurrentContent] = useState("");
   const [newName, setNewName] = useState("");
   const [isCreateFileDialogOpen, setIsCreateFileDialogOpen] = useState(false);
-  const [isCreateFolderDialogOpen, setIsCreateFolderDialogOpen] = useState(false);
+  const [isCreateFolderDialogOpen, setIsCreateFolderDialogOpen] =
+    useState(false);
 
   const currentPath = path[path.length - 1];
 
@@ -106,7 +111,10 @@ function App() {
           {path.map((folder, index) => (
             <React.Fragment key={folder}>
               <BreadcrumbItem>
-                <BreadcrumbLink href="#" onClick={() => handleBreadcrumbClick(index)}>
+                <BreadcrumbLink
+                  href="#"
+                  onClick={() => handleBreadcrumbClick(index)}
+                >
                   {folder}
                 </BreadcrumbLink>
               </BreadcrumbItem>
@@ -124,7 +132,10 @@ function App() {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           {files[currentPath]?.folders.map((folder) => (
-            <DropdownMenuItem key={folder} onClick={() => handleOpenFolder(folder)}>
+            <DropdownMenuItem
+              key={folder}
+              onClick={() => handleOpenFolder(folder)}
+            >
               <Folder className="mr-2 h-4 w-4" />
               {folder}
             </DropdownMenuItem>
@@ -140,7 +151,9 @@ function App() {
 
       {currentFile && (
         <div className="mt-4">
-          <Label className="block mb-2">{`Current Path: ${path.join(" / ")} / ${currentFile}`}</Label>
+          <Label className="block mb-2">{`Current Path: ${path.join(
+            " / "
+          )} / ${currentFile}`}</Label>
           <Textarea
             className="w-full"
             value={currentContent}
@@ -153,7 +166,10 @@ function App() {
         </div>
       )}
 
-      <Dialog open={isCreateFileDialogOpen} onOpenChange={setIsCreateFileDialogOpen}>
+      <Dialog
+        open={isCreateFileDialogOpen}
+        onOpenChange={setIsCreateFileDialogOpen}
+      >
         <DialogTrigger asChild>
           <Button className="mt-4" variant="outline">
             Create File
@@ -162,7 +178,9 @@ function App() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create File</DialogTitle>
-            <DialogDescription>Enter the name of the new file.</DialogDescription>
+            <DialogDescription>
+              Enter the name of the new file.
+            </DialogDescription>
           </DialogHeader>
           <Input
             value={newName}
@@ -175,7 +193,10 @@ function App() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isCreateFolderDialogOpen} onOpenChange={setIsCreateFolderDialogOpen}>
+      <Dialog
+        open={isCreateFolderDialogOpen}
+        onOpenChange={setIsCreateFolderDialogOpen}
+      >
         <DialogTrigger asChild>
           <Button className="mt-4" variant="outline">
             Create Folder
@@ -184,7 +205,9 @@ function App() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Create Folder</DialogTitle>
-            <DialogDescription>Enter the name of the new folder.</DialogDescription>
+            <DialogDescription>
+              Enter the name of the new folder.
+            </DialogDescription>
           </DialogHeader>
           <Input
             value={newName}
