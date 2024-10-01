@@ -74,7 +74,7 @@ const Projects= () => {
         setCurrentComponent(React.createElement(componentModule.default));
       }
     } catch (error) {
-      console.error("Error loading component:", error);
+      console.error(error);
     }
   };
 
