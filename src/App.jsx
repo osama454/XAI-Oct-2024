@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 const Projects = () => {
+  const host =
+    window.location.hostname === "localhost"
+      ? "localhost"
+      : window.location.hostname;
+  const baseUrl = `${window.location.protocol}//${host}:3000`;
+  // console.log(baseUrl);
   const [folders, setFolders] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState("");
   const [projects, setProjects] = useState([]);
@@ -11,7 +17,9 @@ const Projects = () => {
     // console.log("loadFolders");
     const loadFolders = async () => {
       try {
-        const response = await fetch(`${window.location.protocol}://${window.location.hostname}:3000/list-folders`);
+        const response = await fetch(
+          `${baseUrl}/list-folders`
+        );
         const foldersData = await response.json();
         setFolders(foldersData);
         if (foldersData.length > 0) {
@@ -32,12 +40,12 @@ const Projects = () => {
     const loadProjects = async () => {
       try {
         let response = await fetch(
-          `${window.location.protocol}://${window.location.hostname}:3000/folders/${selectedFolder}`
+          `${baseUrl}/folders/${selectedFolder}`
         );
         const subfoldersData = await response.json();
         for (let i = 0; i < subfoldersData.length; i++) {
           response = await fetch(
-            `${window.location.protocol}://${window.location.hostname}:3000/folders/${selectedFolder}/${subfoldersData[i].folder}`
+            `${baseUrl}/folders/${selectedFolder}/${subfoldersData[i].folder}`
           );
           let folders = await response.json();
           subfoldersData[i].folders = folders;
@@ -97,7 +105,7 @@ const Projects = () => {
       // console.log(window.location.pathname);
       // console.log(currentUrl);
       if (window.location.pathname != currentUrl) {
-        location.reload()
+        location.reload();
       }
     };
     window.addEventListener("popstate", onPopState);
