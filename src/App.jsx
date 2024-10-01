@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
-interface Project {
-  folder: string;
-  files: { [key: string]: string };
-  folders: Project[];
-}
 
-const Projects: React.FC = () => {
-  const [folders, setFolders] = useState<string[]>([]);
-  const [selectedFolder, setSelectedFolder] = useState<string>("");
-  const [projects, setProjects] = useState<Project[]>([]);
+
+const Projects= () => {
+  const [folders, setFolders] = useState([]);
+  const [selectedFolder, setSelectedFolder] = useState("");
+  const [projects, setProjects] = useState([]);
   const [currentComponent, setCurrentComponent] =
-    useState<React.ReactNode | null>(null);
+    useState(null);
 
   // Fetch top-level folders
   useEffect(() => {
@@ -57,20 +53,20 @@ const Projects: React.FC = () => {
   }, [selectedFolder]);
 
   // Handle folder selection change
-  const handleFolderChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleFolderChange = (event) => {
     setSelectedFolder(event.target.value);
   };
 
   // Render selected component
   //${selectedFolder}/${folder}/${componentName}.tsx
-  const handleComponentRender = async (path: string) => {
+  const handleComponentRender = async (path) => {
     try {
       if (path == "/") {
         setCurrentComponent(null);
         return;
       }
       let componentModule;
-      let file = `./tasks/${path}/App.tsx`;
+      let file = `./tasks/${path}/App.jsx`;
 
       componentModule = await import(file);
 
@@ -88,7 +84,8 @@ const Projects: React.FC = () => {
 
     // Listen to browser back/forward navigation
     const onPopState = () => {
-      handleComponentRender(window.location.pathname);
+      // handleComponentRender(window.location.pathname);
+      location.reload()
     };
     window.addEventListener("popstate", onPopState);
 
@@ -150,7 +147,7 @@ const Projects: React.FC = () => {
               })}
               {project.folders.map((folder) => {
                 let file = folder.folder;
-                const buttonLabel = file.replace(".tsx", "");
+                const buttonLabel = file.replace(".jsx", "");
                 return (
                   <button
                     key={file}
